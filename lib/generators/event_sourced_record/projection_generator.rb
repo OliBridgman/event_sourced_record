@@ -2,18 +2,19 @@ require 'generators/event_sourced_record'
 
 class EventSourcedRecord::ProjectionGenerator < ActiveRecord::Generators::Base
   source_root File.expand_path('../templates', __FILE__)
-  argument :attributes, 
+  argument :attributes,
     :type => :array, :default => []
 
   def create_migration_file
     ar_major_version = ActiveRecord::VERSION::MAJOR
     if ar_major_version >= 4
-      generate(
-        "migration", "create_#{projection_table_name} #{migration_attributes}"
+      migration_template(
+        "projection_migration.rb",
+        "db/migrate/create_#{projection_table_name}.rb"
       )
     else
       migration_template(
-        "projection_migration.ar3.rb", 
+        "projection_migration.ar3.rb",
         "db/migrate/create_#{projection_table_name}.rb"
       )
     end
@@ -22,7 +23,7 @@ class EventSourcedRecord::ProjectionGenerator < ActiveRecord::Generators::Base
   def create_model_file
     ar_major_version = ActiveRecord::VERSION::MAJOR
     template(
-      "projection_model.ar#{ar_major_version}.rb", 
+      "projection_model.rb",
       File.join('app/models', class_path, "#{projection_file_name}.rb")
     )
   end
@@ -40,7 +41,7 @@ class EventSourcedRecord::ProjectionGenerator < ActiveRecord::Generators::Base
   end
 
   def has_many_foreign_key
-    file_name + '_uuid'
+    file_name + '_id'
   end
 
   def migration_attributes

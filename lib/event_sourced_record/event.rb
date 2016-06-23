@@ -75,7 +75,7 @@ module EventSourcedRecord::Event
   end
 
   def projection_uuid_name
-    self.class.name.underscore.gsub(/_event$/, '') + '_uuid'
+    self.class.name.underscore.gsub(/_event$/, '') + '_id'
   end
 
   def validate_corrent_event_type

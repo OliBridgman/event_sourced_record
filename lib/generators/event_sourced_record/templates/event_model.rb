@@ -5,7 +5,7 @@ class <%= event_class_name %> < ActiveRecord::Base
   serialize :data
 
   belongs_to :<%= belongs_to_name %>,
-    foreign_key: '<%= belongs_to_foreign_key %>', primary_key: 'uuid'
+    foreign_key: '<%= belongs_to_foreign_key %>', primary_key: 'id'
 
   event_type :creation do
     # attributes :user_id
@@ -14,5 +14,3 @@ class <%= event_class_name %> < ActiveRecord::Base
   end
 end
 <% end -%>
-
-

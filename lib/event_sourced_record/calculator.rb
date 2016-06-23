@@ -39,12 +39,16 @@ class EventSourcedRecord::Calculator
   def find_or_build_record
     case @lookup
     when Integer
+      puts "inte?"
       projection_class.where(id: @lookup).first
     when projection_class
+      puts "projection_class"
       projection_class.where(id: @lookup.id).first
     when *self.class.event_classes
+      puts "self.class.event?"
       find_or_build_record_by_event_instance(@lookup)
     else
+      puts "else"
       find_or_build_record_by_uuid(@lookup)
     end
   end
@@ -59,7 +63,7 @@ class EventSourcedRecord::Calculator
   end
 
   def find_or_build_record_by_uuid(uuid)
-    projection_class.where(uuid: uuid).first || projection_class.new(uuid: uuid)
+    projection_class.where(id: uuid).first || projection_class.new(id: uuid)
   end
 
   def projection_class

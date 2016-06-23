@@ -2,7 +2,7 @@ require 'generators/event_sourced_record'
 
 class EventSourcedRecord::EventGenerator < ActiveRecord::Generators::Base
   source_root File.expand_path('../templates', __FILE__)
-  argument :attributes, 
+  argument :attributes,
     :type => :array, :default => []
 
   def create_migration_file
@@ -14,8 +14,8 @@ class EventSourcedRecord::EventGenerator < ActiveRecord::Generators::Base
         attr_banner << ':index' if attr.has_index?
         attr_banner
       }.join(' ')
-      generate(
-        "migration", "create_#{event_table_name} #{attributes_str}"
+      migration_template(
+        "event_migration.rb", "db/migrate/create_#{event_table_name}.rb"
       )
     else
       migration_template(
@@ -26,7 +26,7 @@ class EventSourcedRecord::EventGenerator < ActiveRecord::Generators::Base
 
   def create_model_file
     template(
-      'event_model.rb', 
+      'event_model.rb',
       File.join('app/models', class_path, "#{event_file_name}.rb")
     )
   end
@@ -40,7 +40,7 @@ class EventSourcedRecord::EventGenerator < ActiveRecord::Generators::Base
   private
 
   def belongs_to_foreign_key
-    belongs_to_name +  '_uuid'
+    belongs_to_name +  '_id'
   end
 
   def belongs_to_name

@@ -13,4 +13,3 @@ class <%= event_migration_class_name %> < ActiveRecord::Migration
 <% end -%>
   end
 end
-

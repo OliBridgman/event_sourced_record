@@ -3,7 +3,7 @@ class EventSourcedRecord::ObserverGenerator < Rails::Generators::NamedBase
 
   def create_observer_file
     template(
-      'observer.rb', 
+      'observer.rb',
       File.join('app/observers', class_path, "#{file_name}.rb")
     )
   end
@@ -26,7 +26,7 @@ class EventSourcedRecord::ObserverGenerator < Rails::Generators::NamedBase
   end
 
   def event_uuid_field
-    projection_name + '_uuid'
+    projection_name + '_id'
   end
 
   def projection_name

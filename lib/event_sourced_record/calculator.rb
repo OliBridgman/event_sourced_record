@@ -39,23 +39,19 @@ class EventSourcedRecord::Calculator
   def find_or_build_record
     case @lookup
     when Integer
-      puts "inte?"
       projection_class.where(id: @lookup).first
     when projection_class
-      puts "projection_class"
       projection_class.where(id: @lookup.id).first
     when *self.class.event_classes
-      puts "self.class.event?"
       find_or_build_record_by_event_instance(@lookup)
     else
-      puts "else"
       find_or_build_record_by_uuid(@lookup)
     end
   end
 
   def find_or_build_record_by_event_instance(event)
-    if event.respond_to?(uuid_field)
-      find_or_build_record_by_uuid(event.send(uuid_field))
+    if event.respond_to?(projection_field)
+      find_or_build_record_by_uuid(event.send(projection_field))
     else
       conditions = {id: event.send(projection_name + '_id')}
       projection_class.where(conditions).first
@@ -86,8 +82,8 @@ class EventSourcedRecord::Calculator
     projection = instance_variable_get projection_variable_name
     self.class.event_classes.map { |event_class|
       conditions = nil
-      if event_class.column_names.include?(uuid_field)
-        conditions = {uuid_field => projection.uuid}
+      if event_class.column_names.include?(projection_field)
+        conditions = {projection_field => projection.id}
       else
         conditions = {projection_name + '_id' => projection.id} if projection
       end
@@ -107,7 +103,7 @@ class EventSourcedRecord::Calculator
     end
   end
 
-  def uuid_field
-    projection_name + '_uuid'
+  def projection_field
+    projection_name + '_id'
   end
 end
